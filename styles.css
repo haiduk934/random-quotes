@@ -52,3 +52,11 @@ body {
   border-radius: 8px;
   width: 25%;
 }
+
+.star-icon {
+  font-size: 30px;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-left: 10px;
+  color: gold;
+}
