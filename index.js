@@ -3,7 +3,7 @@ import quotes from "./src/data/quotes.js";
 import { toggleFavorite, hideFavoriteBtn } from "./src/handlest/favorites.js";
 
 const favoritesContainer = document.getElementById("favorites-container");
-const favoriteBtn = document.getElementById("favorite-btn");
+const quoteFavoriteBtn = document.getElementById("quote-favorite-btn");
 const generateBtn = document.getElementById("generate-btn");
 
 let currentQuote = null;
@@ -12,14 +12,14 @@ function setCurrentQuote(quote) {
   currentQuote = quote;
 }
 
-hideFavoriteBtn(favoriteBtn);
+hideFavoriteBtn(quoteFavoriteBtn);
 
-favoriteBtn.addEventListener("click", () =>
-  toggleFavorite(currentQuote, favoriteBtn, favoritesContainer),
+quoteFavoriteBtn.addEventListener("click", () =>
+  toggleFavorite(currentQuote, quoteFavoriteBtn, favoritesContainer),
 );
 
 generateBtn.addEventListener("click", () =>
   handleQuote(quotes, setCurrentQuote),
 );
 
-export { favoriteBtn };
+export { quoteFavoriteBtn };
