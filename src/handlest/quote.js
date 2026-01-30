@@ -13,7 +13,7 @@ function displayQuote(quote) {
   const quoteTextElement = document.getElementById("quote-text");
   const quoteAutorElement = document.getElementById("quote-author");
   quoteElement.dataset.currentQuoteId = id; //---HTML attribute data-current-quote-id will be added
-  quoteTextElement.textContent = text;
+  quoteTextElement.textContent = `"${text}"`;
   quoteAutorElement.textContent = author;
   handleFavorite(isFavorite);
 }

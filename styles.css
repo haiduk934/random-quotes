@@ -48,11 +48,6 @@ body {
   margin-block-end: 0.9em;
 }
 
-.quote-text::before,
-.quote-text::after {
-  content: '"';
-}
-
 .quote-author {
   margin-block-start: 0.9em;
   font-weight: bold;
