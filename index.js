@@ -1,25 +1,80 @@
-import { handleQuote } from "./src/handlest/quote.js";
+import {
+  handleQuote,
+  displayQuote,
+  findQuoteById,
+} from "./src/handlest/quote.js";
 import quotes from "./src/data/quotes.js";
-import { toggleFavorite, hideFavoriteBtn } from "./src/handlest/favorites.js";
+import {
+  toggleFavorite,
+  hideFavoriteBtn,
+  showFavoriteCard,
+} from "./src/handlest/favorites.js";
+import {
+  localStorageGetItem,
+  localStorageSetItem,
+} from "./src/utils/localStorage.js";
 
+const CURRENT_QUOTE_KEY = "currentQuote";
+const FAVORITE_QUOTES_KEY = "favoriteQuotes";
 const favoritesContainer = document.getElementById("favorites-container");
 const quoteFavoriteBtn = document.getElementById("quote-favorite-btn");
 const generateBtn = document.getElementById("generate-btn");
 
 let currentQuote = null;
+const favoriteQuotes = [];
 
-function setCurrentQuote(quote) {
+function setCurrentQuote(quote, shouldToggleIsFavorite = false) {
+  if (shouldToggleIsFavorite) {
+    quote.isFavorite = !quote.isFavorite;
+    if (quote.isFavorite) {
+      favoriteQuotes.push({ ...quote });
+    } else {
+      const index = favoriteQuotes.findIndex(
+        (favoriteQuote) => favoriteQuote.id === quote.id,
+      );
+      if (index !== -1) {
+        favoriteQuotes.splice(index, 1);
+      }
+    }
+    localStorageSetItem(FAVORITE_QUOTES_KEY, favoriteQuotes);
+  }
   currentQuote = quote;
+  localStorageSetItem(CURRENT_QUOTE_KEY, currentQuote);
 }
 
 hideFavoriteBtn(quoteFavoriteBtn);
 
 quoteFavoriteBtn.addEventListener("click", () =>
-  toggleFavorite(currentQuote, quoteFavoriteBtn, favoritesContainer),
+  toggleFavorite(
+    currentQuote,
+    setCurrentQuote,
+    quoteFavoriteBtn,
+    favoritesContainer,
+  ),
 );
 
 generateBtn.addEventListener("click", () =>
-  handleQuote(quotes, setCurrentQuote),
+  handleQuote(quotes, favoriteQuotes, setCurrentQuote),
 );
+
+function init() {
+  const currentQuoteFromStorage = localStorageGetItem(CURRENT_QUOTE_KEY);
+  if (currentQuoteFromStorage) {
+    displayQuote(currentQuoteFromStorage);
+    const quote = findQuoteById(quotes, currentQuoteFromStorage.id);
+    quote.isFavorite = currentQuoteFromStorage.isFavorite;
+    currentQuote = quote;
+  }
+
+  const favoriteQuotesFromStorage = localStorageGetItem(FAVORITE_QUOTES_KEY);
+  if (favoriteQuotesFromStorage) {
+    favoriteQuotesFromStorage.forEach((quote) => {
+      showFavoriteCard(quote, setCurrentQuote, favoritesContainer);
+      favoriteQuotes.push(quote);
+    });
+  }
+}
+
+window.addEventListener("load", init);
 
 export { quoteFavoriteBtn };
